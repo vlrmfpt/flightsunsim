@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sunlit Earth Flight Simulator</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>✈️ Flight Sunlit Simulator</h1>
+  <div id="controls">
+    <label>Flight: 
+      <select id="flight">
+        <option value="KE071">KE071</option>
+        <option value="KE072">KE072</option>
+      </select>
+    </label>
+    <label>Date: <input type="date" id="flightDate" /></label>
+    <label>Speed: 
+      <select id="speed">
+        <option value="1">1x</option>
+        <option value="2" selected>2x</option>
+        <option value="4">4x</option>
+      </select>
+    </label>
+    <button onclick="startSim()">▶️ Start</button>
+    <button onclick="pauseSim()">⏸️ Pause</button>
+  </div>
+  <div id="map"></div>
+  <script src="leaflet.js"></script>
+  <script src="sun.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

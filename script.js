@@ -1,0 +1,1 @@
+console.log('FlightSunSim v1 loaded');

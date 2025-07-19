@@ -1,17 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>KE092 시뮬레이션</title>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FlightSunSim v1</title>
+  <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <style>
-    html, body, #map { height: 100%; margin: 0; }
-  </style>
 </head>
 <body>
+  <h1>FlightSunSim v1 - KE092 Simulation</h1>
+  <div id="controls">
+    <label for="datetime">날짜/시간:</label>
+    <input type="datetime-local" id="datetime" value="2025-10-04T14:30">
+    <label for="speed">배속:</label>
+    <select id="speed">
+      <option value="1">1x</option>
+      <option value="10">10x</option>
+      <option value="60">60x</option>
+    </select>
+    <button id="start">▶️ 시작</button>
+    <button id="pause">⏸️ 일시정지</button>
+    <button id="reset">🔄 리셋</button>
+  </div>
   <div id="map"></div>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/suncalc/suncalc.js"></script>
+  <script src="suncalc.js"></script>
+  <script src="flightpaths.json" type="application/json"></script>
   <script src="app.js"></script>
 </body>
 </html>

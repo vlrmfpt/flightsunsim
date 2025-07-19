@@ -1,20 +1,15 @@
 {
-    "KE071": {
-        "airline": "Korean Air",
-        "flightNumber": "KE071",
-        "origin": "RKSI",
-        "destination": "CYVR",
-        "path": [
-            {"latitude": 37.4691, "longitude": 126.4505, "time": "17:00", "description": "인천 출발 (RKSI)"},
-            {"latitude": 38.5, "longitude": 135.0, "time": "18:00", "description": "동해 상공"},
-            {"latitude": 40.0, "longitude": 150.0, "time": "19:00", "description": "일본 동쪽"},
-            {"latitude": 42.0, "longitude": 165.0, "time": "20:00", "description": "태평양"},
-            {"latitude": 44.0, "longitude": 180.0, "time": "21:00", "description": "국제 날짜 변경선"},
-            {"latitude": 46.0, "longitude": -165.0, "time": "22:00", "description": "태평양"},
-            {"latitude": 48.0, "longitude": -150.0, "time": "23:00", "description": "알래스카 남쪽"},
-            {"latitude": 50.0, "longitude": -135.0, "time": "00:00", "description": "캐나다 서부"},
-            {"latitude": 49.2827, "longitude": -123.1207, "time": "01:00", "description": "밴쿠버 도착 (CYVR)"}
-        ]
-    }
-    // ... 다른 항공편 데이터 추가 가능
+  "KE092": {
+    "departure": "Vancouver",
+    "arrival": "Incheon",
+    "path": [
+      [49.1951, -123.1779],
+      [60, -150],
+      [65, -170],
+      [65, 170],
+      [60, 150],
+      [40, 130],
+      [37.4692, 126.4505]
+    ]
+  }
 }

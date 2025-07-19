@@ -1,49 +1,61 @@
-const map = L.map('map').setView([50, -150], 3);
+let map = L.map('map').setView([40, 0], 2);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-// 기본 타일
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© OpenStreetMap contributors'
-}).addTo(map);
+let planeIcon = L.icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/1547/1547140.png",
+  iconSize: [40, 40]
+});
 
-// KE092 예시 경로 (10월 4일 기준 대략적 좌표 수작업)
-const route = [
-  [49.1947, -123.1792], // 밴쿠버 출발
-  [60, -140],
-  [70, -170],
-  [65, 160],
-  [55, 140],
-  [45, 125],
-  [37.4691, 126.4505] // 인천 도착
-];
+let flight = JSON.parse(document.querySelector("script[src$='flightpaths.json']").textContent).KE092;
+let marker = L.marker(flight.path[0], { icon: planeIcon }).addTo(map);
+let polyline = L.polyline(flight.path, { color: 'red' }).addTo(map);
 
-// 선으로 표시
-L.polyline(route, { color: 'red' }).addTo(map);
+let speed = 1, index = 0, simTime, interval;
 
-// 비행기 위치 초기화
-let planeMarker = L.marker(route[0], { icon: L.divIcon({ className: '', html: '✈️' }) }).addTo(map);
+document.getElementById('start').onclick = () => {
+  clearInterval(interval);
+  speed = parseInt(document.getElementById("speed").value);
+  let startTime = new Date(document.getElementById("datetime").value);
+  simTime = startTime.getTime();
+  interval = setInterval(() => {
+    simTime += 1000 * speed;
+    updateSimulation(simTime);
+  }, 1000);
+};
 
-// 해빛 경계 그리기
-function drawSunlightBoundary(date) {
-  const bounds = [];
-  for (let lon = -180; lon <= 180; lon += 5) {
-    const times = SunCalc.getTimes(date, 0, lon);
-    const solarPos = SunCalc.getPosition(times.sunrise, 0, lon);
-    const lat = -solarPos.altitude * (180 / Math.PI); // 대략적 경계선 계산
-    bounds.push([lat, lon]);
+document.getElementById('pause').onclick = () => clearInterval(interval);
+document.getElementById('reset').onclick = () => {
+  clearInterval(interval);
+  marker.setLatLng(flight.path[0]);
+  drawSunlight(new Date(document.getElementById("datetime").value));
+};
+
+function updateSimulation(time) {
+  let t = (time - new Date(document.getElementById("datetime").value).getTime()) / (1000 * 60 * 60);
+  index = Math.min(Math.floor(t / 1), flight.path.length - 1);
+  if (index < flight.path.length - 1) {
+    let from = flight.path[index], to = flight.path[index + 1];
+    let progress = t % 1;
+    let lat = from[0] + (to[0] - from[0]) * progress;
+    let lng = from[1] + (to[1] - from[1]) * progress;
+    marker.setLatLng([lat, lng]);
   }
-  L.polyline(bounds, { color: 'yellow', dashArray: '5,5' }).addTo(map);
+  drawSunlight(new Date(time));
 }
 
-// 현재 시간으로 초기 해빛 경계 표시
-drawSunlightBoundary(new Date("2024-10-04T15:00:00Z")); // UTC 기준
-
-// 비행 시뮬레이션
-let index = 0;
-function animateFlight() {
-  if (index < route.length) {
-    planeMarker.setLatLng(route[index]);
-    index++;
-    setTimeout(animateFlight, 1500); // 1.5초 간격
+function drawSunlight(time) {
+  if (window.sunLayer) map.removeLayer(window.sunLayer);
+  let bounds = [];
+  for (let lon = -180; lon <= 180; lon += 10) {
+    let times = SunCalc.getTimes(time, 0, lon);
+    let night = times.sunrise.getTime() > time.getTime();
+    bounds.push([[85, lon], [-85, lon]]);
   }
+  window.sunLayer = L.rectangle([[-85, -180], [85, 180]], {
+    color: 'black',
+    fillColor: 'black',
+    fillOpacity: 0.5,
+    weight: 0
+  }).addTo(map);
 }
-animateFlight();
+
